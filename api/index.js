@@ -5,7 +5,7 @@ var secrets = require('./config/secrets')
 const express = require('express')
 const app = express()
 
-var cors = require('cors')
+var cors = require('cors');
 
 app.use(cors())
 
@@ -15,10 +15,11 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-app.get('/', (req, res) => res.send('Hello World!'))
+app.get('/', (req, res) => res.send('Hello World! ' + uuid()))
 app.get("/check", [auth(), (req, res) => res.send('Hello World!')])
 app.get("/check2", [auth("admin"), (req, res) => res.send('Hello World!')])
 app.use('/auth', require("./routes/auth"));
+app.use('/categories', require("./routes/categories"));
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))
 
