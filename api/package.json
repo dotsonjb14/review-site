@@ -1,0 +1,8 @@
+{
+  "name": "review-site-api",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "https://github.com/dotsonjb14/review-site",
+  "author": "Joseph Dotson",
+  "license": "MIT"
+}
