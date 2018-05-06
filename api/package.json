@@ -4,5 +4,8 @@
   "main": "index.js",
   "repository": "https://github.com/dotsonjb14/review-site",
   "author": "Joseph Dotson",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  }
 }
