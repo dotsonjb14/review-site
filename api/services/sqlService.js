@@ -1,9 +1,9 @@
 const secrets = require("../config/secrets")
+const { Client } = require('pg')
 
 class sqlService
 {
     async executeQuery(queryString, params) {
-        const { Client } = require('pg')
         const client = new Client(secrets.sqlSettings)
 
         await client.connect()

@@ -5,6 +5,10 @@ var secrets = require('./config/secrets')
 const express = require('express')
 const app = express()
 
+var cors = require('cors')
+
+app.use(cors())
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
  
@@ -28,10 +32,14 @@ function auth(requiredRole) {
                 res.status(400).send("unauthorized");
                 canGoNext = false;
             }
+            else {
+                req.token = token;
+            }
         } catch (error) {
             res.status(401).send("invalid token");
             canGoNext = false;
         }
+        
         if(canGoNext)
             next();
     }
