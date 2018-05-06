@@ -7,7 +7,7 @@ class sqlService
         const client = new Client(secrets.sqlSettings)
 
         await client.connect()
-
+        
         let results = await client.query(queryString, params);
 
         await client.end();
