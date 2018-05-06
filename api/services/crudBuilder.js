@@ -37,7 +37,7 @@ class crudBuilder {
                     type = field.type;
                 }
 
-                return `\$${index + 1}::${type}`;
+                return `$${index + 1}::${type}`;
             })
 
             let fieldValues = fieldNames.map(field => {
@@ -76,7 +76,7 @@ class crudBuilder {
                     name = field.name;
                 }
 
-                return `${name} = \$${index + 1}::${type}`;
+                return `${name} = $${index + 1}::${type}`;
             })
 
             let fieldValues = fieldNames.map(field => {
