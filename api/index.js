@@ -18,8 +18,10 @@ app.use(bodyParser.json())
 app.get('/', (req, res) => res.send('Hello World! ' + uuid()))
 app.get("/check", [auth(), (req, res) => res.send('Hello World!')])
 app.get("/check2", [auth("admin"), (req, res) => res.send('Hello World!')])
-app.use('/auth', require("./routes/auth"));
-app.use('/categories', require("./routes/categories"));
+
+setupRoutes('auth');
+setupRoutes('categories');
+setupRoutes('posts');
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))
 
@@ -44,4 +46,8 @@ function auth(requiredRole) {
         if(canGoNext)
             next();
     }
+}
+
+function setupRoutes(name) {
+    app.use(`/${name}`, require(`./routes/${name}`));
 }
