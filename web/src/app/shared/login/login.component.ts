@@ -7,7 +7,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  private isCurrentlyLoggedIn = false;
+  private user = null;
   private loginData = {
     username: "",
     password: ""
@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.authService.CurrentToken.subscribe(data => {
-      this.isCurrentlyLoggedIn = data !== null;
+      this.user = data;
       this.loginData.username = "";
       this.loginData.password = "";
     })

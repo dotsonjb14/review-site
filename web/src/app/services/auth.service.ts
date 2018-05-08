@@ -11,7 +11,7 @@ export class AuthService {
   public CurrentToken = new BehaviorSubject<string>(null)
 
   constructor(private httpClient: HttpClient) {
-    this.CurrentToken.next(localStorage.getItem(tokenStorageKey))
+    this.CurrentToken.next(this.decode(localStorage.getItem(tokenStorageKey)));
   }
 
   public login({username, password}) {
@@ -25,12 +25,16 @@ export class AuthService {
         .set('Content-Type', 'application/x-www-form-urlencoded')
     }).subscribe((data: {bearer}) => {
       localStorage.setItem(tokenStorageKey, data.bearer);
-      this.CurrentToken.next(data.bearer);
+      this.CurrentToken.next(this.decode(data.bearer));
     });
   }
 
   public logout() {
     localStorage.clear();
     this.CurrentToken.next(null)
+  }
+
+  private decode(token: string) {
+    return JSON.parse(atob(token.split('.')[1]));
   }
 }
