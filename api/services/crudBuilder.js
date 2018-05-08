@@ -14,6 +14,17 @@ class crudBuilder {
                     res.send(results.rows);
                 });
         })
+
+        router.get("/:id", function (req, res) {
+            let id = req.params.id;
+            sql.executeQuery(`SELECT * from ${tableConfig.tableName} WHERE id = $1::uuid`, [id])
+                .catch(err => {
+                    res.status(500).send(err);
+                })
+                .then(results => {
+                    res.send(results.rows);
+                });
+        })
         
         router.post("/", function (req, res) {
             let data = Object.assign({}, req.body, {
