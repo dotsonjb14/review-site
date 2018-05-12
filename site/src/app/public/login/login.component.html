@@ -1,3 +1,17 @@
 <p>
-  login works!
+  <ng-container *ngIf="user !== null; then loggedIn; else loginForm"></ng-container>
 </p>
+
+<ng-template #loginForm>
+  <form (submit)="login()">
+    Please log in<br />
+    <input [(ngModel)]="loginData.username" name="username" type="text" placeholder="username..."><br />
+    <input [(ngModel)]="loginData.password" name="password" type="password" placeholder="password..."><br />
+    <button type="submit">Login</button>
+  </form>
+</ng-template>
+
+<ng-template #loggedIn>
+  All good here {{ user.username }}<br />
+  <button (click)="logout()">logout</button>
+</ng-template>

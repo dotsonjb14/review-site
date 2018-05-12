@@ -35,6 +35,7 @@ export class AuthService {
   }
 
   private decode(token: string) {
+    if(token === null) return null;
     return JSON.parse(atob(token.split('.')[1]));
   }
 }
