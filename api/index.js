@@ -21,7 +21,8 @@ app.get("/check2", [auth("admin"), (req, res) => res.send('Hello World!')])
 
 setupRoutes('auth');
 setupRoutes('categories');
-setupRoutes('posts');
+setupRoutes('articles')
+//setupRoutes('posts');
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))
 

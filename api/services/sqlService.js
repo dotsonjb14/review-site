@@ -1,19 +1,19 @@
 const secrets = require("../config/secrets")
 const { Client } = require('pg')
 
-class sqlService
-{
-    async executeQuery(queryString, params) {
-        const client = new Client(secrets.sqlSettings)
+module.exports = {
+    executeQuery
+};
 
-        await client.connect()
-        
-        let results = await client.query(queryString, params);
+async function executeQuery(queryString, params) {
+    const client = new Client(secrets.sqlSettings)
 
-        await client.end();
+    await client.connect()
+    
+    let results = await client.query(queryString, params);
 
-        return results;
-    }
+    await client.end();
+
+    return results;
 }
 
-module.exports = sqlService;
