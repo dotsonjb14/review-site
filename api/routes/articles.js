@@ -15,7 +15,17 @@ router.get('/', [async (req, res) => {
         console.error(err);
         res.status(500).send(err);
     }
-}]); 
+}]);
+
+router.get('/search', [async (req, res) => {
+    try {
+        let results = await sqlService.executeQuery('SELECT * from article');
+        res.send(results.rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err);
+    }
+}]);
 
 router.post('/', [scopes('article:add'), async (req, res) => {
     let data = Object.assign({}, req.body, {

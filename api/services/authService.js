@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 const secrets = require("../config/secrets");
+const crypto = require('crypto');
+const mongoService = require("./mongoService")
 
 const userRoleScopes = []; // no specific permissions
 const authorRoleScopes = userRoleScopes.concat(
@@ -21,7 +23,29 @@ const scopeMapping = {
 
 module.exports = {
     getScopes,
-    requireScopes
+    requireScopes,
+    loginUser
+}
+
+async function loginUser(username, password) {
+    const hash = crypto.createHmac('sha256', secrets.passwordHashPhrase)
+        .update(password)
+        .digest('hex');
+
+    var db = await mongoService.getDb();
+    var users = db.collection('users');
+
+    var result = await users.find({
+        username: username,
+        password: hash
+    }).toArray();
+
+    if(result.length !== 0) {
+        return result[0];
+    }
+    else {
+        return null;
+    }
 }
 
 function getScopes(role) {
