@@ -1,99 +1,50 @@
 const sqlService = require("../services/sqlService")
-const uuid = require('uuid/v4');
-
 const router = require('express').Router();
-
 const authService = require('../services/authService');
+const mongoService = require('../services/mongoService');
 
 const scopes = (scope) => authService.requireScopes(["adminpanel", scope]);
 
 router.get('/', [async (req, res) => {
     try {
-        let results = await sqlService.executeQuery('SELECT * from article');
-        res.send(results.rows);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send(err);
+        var results = await mongoService.getDocs('articles', {});
+        res.status(200).send(results);
+    } catch (error) {
+        res.status(500).send('error');
     }
 }]);
 
 router.get('/search', [async (req, res) => {
-    try {
-        let results = await sqlService.executeQuery('SELECT * from article');
-        res.send(results.rows);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send(err);
-    }
+    res.status(200).send('yo')
 }]);
 
 router.post('/', [scopes('article:add'), async (req, res) => {
-    let data = Object.assign({}, req.body, {
-        id: uuid()
-    });
-
-    let sqlQuery = 'INSERT INTO article \
-    (id,         author,   category, tags,     content,  title,    product,  created_at, modified_at, active) VALUES \
-    ($1::uuid,   $2::uuid, $3::uuid, $4::text, $5::text, $6::text, $7::uuid, NOW(),   NOW(), false)'
-
     try {
-        await sqlService.executeQuery(sqlQuery, [
-            data.id, data.author, data.category, data.tags, data.content, data.title, data.product
-        ])
-        res.send(data);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send(err);
+        var result = await mongoService.insertDoc('articles', req.body);
+        res.status(201).send(Object.assign(req.body, {
+            _id: result.inser1tedId
+        }))
+    } catch (error) {
+        res.status(500).send('error');
     }
 }])
 
 router.delete('/:id', [scopes('article:delete'), async (req, res) => {
-    let id = req.params.id;
-
-    let sqlQuery = 'DELETE FROM article WHERE id = $1::uuid'
-
     try {
-        await sqlService.executeQuery(sqlQuery, [id])
-        res.status(204).send();
-    } catch (err) {
-        console.error(err);
-        res.status(500).send(err);
+        var result = await mongoService.deleteDoc('articles', req.params.id);
+        res.status(200).send(result)
+    } catch (error) {
+        res.status(500).send('error');
     }
 }])
 
-router.put('/:id', [scopes('article:update'), async (req, res) => {
-    let id = req.params.id;
-    let data = Object.assign({}, req.body, {
-        id: id
-    });
-
-    let sqlQuery = 'UPDATE article SET \
-                    category = $2::uuid, tags = $3::text, content = $4::text, title = $5::text, product = $6::uuid, modified_at = NOW()\
-                    WHERE id = $1::uuid'
-
+router.patch('/:id', [scopes('article:update'), async (req, res) => {
     try {
-        await sqlService.executeQuery(sqlQuery, [id, data.category, data.tags, data.content, data.title, data.product])
-        res.send(data);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send(err);
+        var result = await mongoService.updateDoc('articles', req.body, req.params.id);
+        res.status(200).send(result)
+    } catch (error) {
+        res.status(500).send('error');
     }
 }])
-
-router.put('/publish/:id', [scopes('article:publish'), async (req, res) => {
-    let id = req.params.id;
-
-    let sqlQuery = 'UPDATE article SET \
-                    active = true, modified_at = NOW(), published_at = NOW()\
-                    WHERE id = $1::uuid'
-
-    try {
-        await sqlService.executeQuery(sqlQuery, [id])
-        res.status(204).send();
-    } catch (err) {
-        console.error(err);
-        res.status(500).send(err);
-    }
-}]);
 
 module.exports = router;

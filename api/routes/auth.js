@@ -1,7 +1,6 @@
 const router = require('express').Router()
 const jwt = require('jsonwebtoken');
 const secrets = require("../config/secrets");
-
 const authService = require('../services/authService');
 
 router.post('/token', async function (req, res) {
@@ -14,7 +13,6 @@ router.post('/token', async function (req, res) {
     try {
         result = await authService.loginUser(req.body.username, req.body.password);
     } catch (error) {
-        console.error(error)
         res.status(500).send(error)
         return;
     }
